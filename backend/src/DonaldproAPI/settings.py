@@ -37,16 +37,45 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+     # third party api services
+    'algoliasearch_django',
+
+    # our app
     'product',
+    'search',
     'api',
+
+    # third party app
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+    'corsheaders',
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8111",
+    "http://127.0.0.1:8111",
+]
+
+CORS_URLS_REGEX = r"^/api/.*$"
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=3),
+    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=2),
+}
+#Dans un fichier .env django-dotenv
+ALGOLIA = {
+  'APPLICATION_ID': 'B87CCQIXYW',
+  'API_KEY': '229577eaf6b25ccfc3f671cb8fd657a1' # Your Write API Key
+}
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES":[
         "rest_framework.authentication.SessionAuthentication",
         "product.authentication.TokenAuthentication",
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     "DEFAULT_PERMISSION_CLASSES":[
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
@@ -58,6 +87,7 @@ REST_FRAMEWORK = {
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
